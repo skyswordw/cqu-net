@@ -1,6 +1,6 @@
 # CQU-NET 自动登录工具
 
-这是一个重庆大学校园网自动登录工具，每30秒检测一次网络状态，在断网时自动重新登录。
+这是一个重庆大学校园网自动登录工具，每60秒检测一次网络状态，在断网时自动重新登录。
 
 ## 使用方法
 
@@ -13,6 +13,7 @@ docker run -d \
   -e USER_ACCOUNT="你的学号" \
   -e USER_PASSWORD="你的密码" \
   -e USER_MAC="你的MAC地址" \
+  -e CHECK_INTERVAL="60" \
   --name cqu-net \
   --restart always \
   ghcr.io/skyswordw/cqu-net:latest
@@ -54,6 +55,7 @@ docker run -d \
 - USER_ACCOUNT: 你的学号
 - USER_PASSWORD: 你的密码
 - USER_MAC: 你的设备MAC地址（格式示例：3ac47ff39813）
+- CHECK_INTERVAL: （可选）检测间隔时间，单位为秒，默认值为60
 
 ### 如何获取MAC地址
 - Windows: 在命令提示符中输入 `ipconfig /all` 查看"物理地址"
@@ -94,7 +96,6 @@ docker run ... ghcr.io/你的GitHub用户名/cqu-net:v1.0.0
 ### 可配置的环境变量
 计划添加以下环境变量支持：
 - `GATEWAY_IP`: 登录网关IP地址（默认：10.254.7.4）
-- `CHECK_INTERVAL`: 网络检测间隔时间（默认：30秒）
 - `USER_AGENT_TYPE`: 用户代理类型，可选值：
   - `mac`: macOS设备
   - `windows`: Windows设备

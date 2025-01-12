@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# 设置默认值
+CHECK_INTERVAL=${CHECK_INTERVAL:-60}
+
 while true; do
     if ! ping -c 1 www.baidu.com > /dev/null 2>&1; then
         echo "网络断开，尝试重新登录..."
@@ -14,5 +17,5 @@ while true; do
     else
         echo "网络连接正常"
     fi
-    sleep 30
+    sleep $CHECK_INTERVAL
 done 
