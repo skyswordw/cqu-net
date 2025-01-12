@@ -6,7 +6,7 @@
 
 ### 方式一：使用预构建镜像（推荐）
 
-直接使用 GitHub Container Registry 上的预构建镜像：
+#### 使用 Docker 命令运行
 
 ```bash
 docker run -d \
@@ -16,6 +16,20 @@ docker run -d \
   --name cqu-net \
   --restart always \
   ghcr.io/skyswordw/cqu-net:latest
+```
+
+#### 使用 Docker Compose 运行
+
+1. 复制模板文件并重命名：
+```bash
+cp docker-compose.template.yml docker-compose.yml
+```
+
+2. 编辑 `docker-compose.yml`，替换其中的学号、密码和MAC地址
+
+3. 启动服务：
+```bash
+docker-compose up -d
 ```
 
 ### 方式二：本地构建
