@@ -4,7 +4,45 @@
 
 ## 使用方法
 
-### 方式一：使用预构建镜像（推荐）
+### 方式一：使用预构建镜像
+
+#### 使用 Docker Compose 运行（适用于 1Panel、Dockge、Portainer 等面板）
+
+下面是一个带有详细注释的 docker-compose 配置示例：
+
+```yaml
+version: '3.9'
+services:
+  cqu-net:
+    image: ghcr.io/skyswordw/cqu-net:latest    # 使用最新版本的镜像
+    container_name: cqu-net                     # 容器名称
+    restart: always                             # 容器自动重启策略
+    environment:
+      - USER_ACCOUNT=${USER_ACCOUNT}           # 你的学号
+      - USER_PASSWORD=${USER_PASSWORD}         # 你的密码
+      - USER_MAC=${USER_MAC}                   # 你的MAC地址
+      - CHECK_INTERVAL=${CHECK_INTERVAL}       # 检测间隔时间（秒）
+```
+
+在容器管理面板中需要配置的环境变量：
+```plaintext
+USER_ACCOUNT=你的学号
+USER_PASSWORD=你的密码
+USER_MAC=你的MAC地址
+CHECK_INTERVAL=60
+```
+
+部署步骤：
+1. 在面板中创建新的应用/堆栈：
+   - 1Panel：在"应用管理"中选择"自定义安装"
+   - Dockge：创建新的 Stack
+   - Portainer：在"Stacks"中创建新的 stack
+
+2. 将上述 docker-compose 配置复制到编辑器中
+
+3. 在环境变量配置部分填入你的个人信息
+
+4. 点击部署即可
 
 #### 使用 Docker 命令运行
 
@@ -19,21 +57,9 @@ docker run -d \
   ghcr.io/skyswordw/cqu-net:latest
 ```
 
-#### 使用 Docker Compose 运行
-
-1. 复制模板文件并重命名：
-```bash
-cp docker-compose.template.yml docker-compose.yml
-```
-
-2. 编辑 `docker-compose.yml`，替换其中的学号、密码和MAC地址
-
-3. 启动服务：
-```bash
-docker-compose up -d
-```
-
 ### 方式二：本地构建
+
+适合需要自定义修改或本地开发的用户：
 
 1. 首先构建Docker镜像：
 ```bash
