@@ -1,6 +1,6 @@
 # CQU-NET 自动登录工具
 
-这是一个重庆大学校园网自动登录工具，每60秒检测一次网络状态，在断网时自动重新登录。
+这是一个重庆大学校园网自动登录工具，定期检测网络状态（默认每60秒），在断网时自动重新登录。
 
 ## 使用方法
 
@@ -20,7 +20,7 @@ services:
     environment:
       - USER_ACCOUNT=${USER_ACCOUNT}           # 你的学号
       - USER_PASSWORD=${USER_PASSWORD}         # 你的密码
-      - USER_MAC=${USER_MAC}                   # 你的MAC地址
+      - USER_IP=${USER_IP}                     # 你的IP地址
       - CHECK_INTERVAL=${CHECK_INTERVAL}       # 检测间隔时间（秒）
 ```
 
@@ -28,7 +28,7 @@ services:
 ```plaintext
 USER_ACCOUNT=你的学号
 USER_PASSWORD=你的密码
-USER_MAC=你的MAC地址
+USER_IP=你的IP地址
 CHECK_INTERVAL=60
 ```
 
@@ -50,7 +50,7 @@ CHECK_INTERVAL=60
 docker run -d \
   -e USER_ACCOUNT="你的学号" \
   -e USER_PASSWORD="你的密码" \
-  -e USER_MAC="你的MAC地址" \
+  -e USER_IP="你的IP地址" \
   -e CHECK_INTERVAL="60" \
   --name cqu-net \
   --restart always \
@@ -71,7 +71,7 @@ docker build -t cqu-net .
 docker run -d \
   -e USER_ACCOUNT="你的学号" \
   -e USER_PASSWORD="你的密码" \
-  -e USER_MAC="你的MAC地址" \
+  -e USER_IP="你的IP地址" \
   --name cqu-net \
   --restart always \
   cqu-net
@@ -80,15 +80,14 @@ docker run -d \
 ### 环境变量说明
 - USER_ACCOUNT: 你的学号
 - USER_PASSWORD: 你的密码
-- USER_MAC: 你的设备MAC地址（格式示例：3ac47ff39813）
+- USER_IP: 你的IP地址（例如：10.242.187.71）
 - CHECK_INTERVAL: （可选）检测间隔时间，单位为秒，默认值为60
 
-### 如何获取MAC地址
-- Windows: 在命令提示符中输入 `ipconfig /all` 查看"物理地址"
-- macOS: 在终端中输入 `ifconfig en0 | grep ether` 查看
-- Linux: 在终端中输入 `ip link` 或 `ifconfig` 查看
+### 如何获取IP地址
+- Windows: 在命令提示符中输入 `ipconfig` 查看"IPv4 地址"
+- macOS/Linux: 在终端中输入 `ifconfig` 或 `ip addr` 查看
 
-注意：MAC地址需要去掉冒号或连字符，例如 `3a:c4:7f:f3:98:13` 应该输入为 `3ac47ff39813`
+注意：请使用实际分配到的IP地址。如果你使用DHCP，请填写DHCP服务器分配的IP地址。如果你使用静态IP，请填写你配置的静态IP地址。
 
 ## 查看日志
 ```bash
