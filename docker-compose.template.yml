@@ -7,6 +7,6 @@ services:
     environment:
       - USER_ACCOUNT=你的学号    # 例如：20221401013
       - USER_PASSWORD=你的密码   # 例如：123456
-      - USER_MAC=你的MAC地址     # 例如：3ac47ff39813，注意需要去掉冒号
+      - USER_IP=你的IP地址      # 例如：10.242.187.71，请填写实际分配到的IP地址
       - CHECK_INTERVAL=60        # 可选：检测间隔时间（秒），默认60秒
     restart: always 
