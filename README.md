@@ -1,6 +1,6 @@
 # CQU-NET 自动登录工具
 
-这是一个重庆大学校园网自动登录工具，定期检测网络状态（默认每60秒），在断网时自动重新登录。
+这是一个重庆大学校园网自动登录工具，定期检测网络状态（默认每5秒），在断网时自动重新登录。
 
 ## 使用方法
 
@@ -18,18 +18,20 @@ services:
     container_name: cqu-net                     # 容器名称
     restart: always                             # 容器自动重启策略
     environment:
-      - USER_ACCOUNT=${USER_ACCOUNT}           # 你的学号
-      - USER_PASSWORD=${USER_PASSWORD}         # 你的密码
-      - USER_IP=${USER_IP}                     # 你的IP地址
-      - CHECK_INTERVAL=${CHECK_INTERVAL}       # 检测间隔时间（秒）
+      - ACCOUNT=${ACCOUNT}                     # 你的学号/工号
+      - PASSWORD=${PASSWORD}                   # 你的密码
+      - TERM_TYPE=${TERM_TYPE:-pc}             # (可选) 登录设备类型, pc 或 android, 默认 pc
+      - LOG_LEVEL=${LOG_LEVEL:-info}           # (可选) 日志级别, info 或 debug, 默认 info
+      - INTERVAL=${INTERVAL:-5}                # (可选) 检测间隔时间（秒）, 默认 5
 ```
 
 在容器管理面板中需要配置的环境变量：
 ```plaintext
-USER_ACCOUNT=你的学号
-USER_PASSWORD=你的密码
-USER_IP=你的IP地址
-CHECK_INTERVAL=60
+ACCOUNT=你的学号或工号
+PASSWORD=你的密码
+# TERM_TYPE=pc      # 可选, 默认是 pc, 如需模拟手机登录可改为 android
+# LOG_LEVEL=info    # 可选, 默认是 info, 如需调试可改为 debug
+# INTERVAL=5        # 可选, 默认是 5 秒
 ```
 
 部署步骤：
@@ -40,7 +42,7 @@ CHECK_INTERVAL=60
 
 2. 将上述 docker-compose 配置复制到编辑器中
 
-3. 在环境变量配置部分填入你的个人信息
+3. 在环境变量配置部分填入你的个人信息 (ACCOUNT 和 PASSWORD 是必需的)
 
 4. 点击部署即可
 
@@ -48,10 +50,11 @@ CHECK_INTERVAL=60
 
 ```bash
 docker run -d \
-  -e USER_ACCOUNT="你的学号" \
-  -e USER_PASSWORD="你的密码" \
-  -e USER_IP="你的IP地址" \
-  -e CHECK_INTERVAL="60" \
+  -e ACCOUNT="你的学号或工号" \
+  -e PASSWORD="你的密码" \
+  # -e TERM_TYPE="pc" \
+  # -e LOG_LEVEL="info" \
+  # -e INTERVAL="5" \
   --name cqu-net \
   --restart always \
   ghcr.io/skyswordw/cqu-net:latest
@@ -69,25 +72,22 @@ docker build -t cqu-net .
 2. 运行容器（请替换下面的环境变量）：
 ```bash
 docker run -d \
-  -e USER_ACCOUNT="你的学号" \
-  -e USER_PASSWORD="你的密码" \
-  -e USER_IP="你的IP地址" \
+  -e ACCOUNT="你的学号或工号" \
+  -e PASSWORD="你的密码" \
+  # -e TERM_TYPE="pc" \
+  # -e LOG_LEVEL="info" \
+  # -e INTERVAL="5" \
   --name cqu-net \
   --restart always \
   cqu-net
 ```
 
 ### 环境变量说明
-- USER_ACCOUNT: 你的学号
-- USER_PASSWORD: 你的密码
-- USER_IP: 你的IP地址（例如：10.242.187.71）
-- CHECK_INTERVAL: （可选）检测间隔时间，单位为秒，默认值为60
-
-### 如何获取IP地址
-- Windows: 在命令提示符中输入 `ipconfig` 查看"IPv4 地址"
-- macOS/Linux: 在终端中输入 `ifconfig` 或 `ip addr` 查看
-
-注意：请使用实际分配到的IP地址。如果你使用DHCP，请填写DHCP服务器分配的IP地址。如果你使用静态IP，请填写你配置的静态IP地址。
+- `ACCOUNT`: **必需**, 你的学号或工号
+- `PASSWORD`: **必需**, 你的密码
+- `TERM_TYPE`: (可选) 登录模拟的设备类型，可选值为 `pc` 或 `android`。默认为 `pc`。
+- `LOG_LEVEL`: (可选) 输出日志的级别，可选值为 `info` 或 `debug`。默认为 `info`。
+- `INTERVAL`: (可选) 网络连接检测间隔时间，单位为秒。默认为 `5`。
 
 ## 查看日志
 ```bash
@@ -113,27 +113,4 @@ docker start cqu-net
 
 如果你想使用特定版本的镜像，可以在运行时指定版本号，例如：
 ```bash
-docker run ... ghcr.io/你的GitHub用户名/cqu-net:v1.0.0
-```
-
-## 未来开发计划 (TODO)
-
-### 可配置的环境变量
-计划添加以下环境变量支持：
-- `GATEWAY_IP`: 登录网关IP地址（默认：10.254.7.4）
-- `USER_AGENT_TYPE`: 用户代理类型，可选值：
-  - `mac`: macOS设备
-  - `windows`: Windows设备
-  - `linux`: Linux设备
-  - `custom`: 自定义UA（需配合 `CUSTOM_USER_AGENT` 使用）
-- `CUSTOM_USER_AGENT`: 自定义User-Agent字符串
-
-### 功能优化
-- 支持自定义网络检测目标（默认为 www.baidu.com）
-- 优化重试策略：
-  - 支持配置短时间内最大重试次数
-  - 添加指数退避算法，避免频繁重试
-  - 在登录失败时解析响应内容，提供更详细的错误信息
-- 添加登录状态检测（通过解析登录接口返回信息）
-- 支持日志级别配置
-- 添加登录成功/失败通知机制 
+docker run ... ghcr.io/skyswordw/cqu-net:v1.0.0
