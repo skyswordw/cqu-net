@@ -45,7 +45,7 @@ is_internet_connected() {
 # Get the currently logged-in account details
 get_account() {
     # Fetch the main portal page and extract uid and NID
-    html=$(curl -s --connect-timeout 3 "http://10.254.7.4/")
+    html=$(curl -s --connect-timeout 3 "http://10.254.7.4/" | iconv -f GB2312 -t UTF-8 2>/dev/null || cat)
     if echo "$html" | grep -q "login_method"; then
         # If login form elements are present, likely not logged in
         echo "Not logged in"
