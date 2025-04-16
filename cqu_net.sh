@@ -17,7 +17,7 @@ log() {
     message=$@
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     if [ "$LOG_LEVEL" = "debug" ] || { [ "$LOG_LEVEL" = "info" ] && [ "$level" != "debug" ]; }; then
-        echo "$timestamp - ${level^^} - $message"
+        echo "$timestamp - $(echo $level | tr '[:lower:]' '[:upper:]') - $message"
     fi
 }
 
